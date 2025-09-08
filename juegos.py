@@ -1,10 +1,14 @@
 from flask import Flask
-from controllers.videojueos_controller import game_bp  # Importamos el blueprint de videojuegos
+from config.database import Base, engine
+from controllers.videojuegos_controller import videojuegos_bp
 
 app = Flask(__name__)
 
-# Registrar el blueprint de videojuegos
-app.register_blueprint(game_bp, url_prefix="/games")
+# Crear tablas si no existen
+Base.metadata.create_all(bind=engine)
+
+# Registrar las rutas
+app.register_blueprint(videojuegos_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)

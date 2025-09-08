@@ -1,13 +1,18 @@
 
 
+
 import os
+import sys
 import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
-from models.videojuego_model import Base
 from dotenv import load_dotenv
 logging.basicConfig(level=logging.INFO)
+
+# Añadir la raíz del proyecto al sys.path para que los imports funcionen correctamente
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from models.videojuego_model import Base
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -33,12 +38,15 @@ def get_engine():
     engine = create_engine(SQLITE_URI, echo=True)
     return engine
 
+
 engine = get_engine()
-Session = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Session = SessionLocal
 Base.metadata.create_all(engine)
+
 
 def get_db_session():
     """
     Retorna una nueva sesión de base de datos para ser utilizada en los servicios o controladores.
     """
-    return Session()
+    return SessionLocal()
