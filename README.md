@@ -18,7 +18,7 @@ El sistema permite registrar, consultar, actualizar y eliminar videojuegos, así
 - `services/`: Lógica de negocio y conexión entre controladores y repositorios.
 - `config/`: Configuración de la base de datos y utilidades.
 - `juegos.py`: Archivo principal para iniciar la aplicación Flask.
-- `requirements.txt`: Lista de dependencias necesarias para ejecutar el proyecto.
+
 
 
 ## Licencia
