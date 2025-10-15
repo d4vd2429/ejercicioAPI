@@ -1,0 +1,44 @@
+{
+  "info": {
+    "name": "ejercicioAPI - Auth",
+    "_postman_id": "e1a9d7a4-xxxx-4d4a-9f1b-xxxxxxxx",
+    "description": "Colección para probar endpoints de autenticación",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Content-Type","value":"application/json"}],
+        "body": {"mode":"raw","raw":"{\n  \"username\": \"testuser\",\n  \"password\": \"secret123\"\n}"},
+        "url": {"raw":"http://localhost:5000/registry","protocol":"http","host":["localhost"],"port":"5000","path":["registry"]}
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Content-Type","value":"application/json"}],
+        "body": {"mode":"raw","raw":"{\n  \"username\": \"testuser\",\n  \"password\": \"secret123\"\n}"},
+        "url": {"raw":"http://localhost:5000/login","protocol":"http","host":["localhost"],"port":"5000","path":["login"]}
+      }
+    },
+    {
+      "name": "Refresh",
+      "request": {
+        "method": "POST",
+        "header": [{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{refresh_token}}"}],
+        "url": {"raw":"http://localhost:5000/refresh","protocol":"http","host":["localhost"],"port":"5000","path":["refresh"]}
+      }
+    },
+    {
+      "name": "Get Users",
+      "request": {
+        "method": "GET",
+        "header": [{"key":"Authorization","value":"Bearer {{access_token}}"}],
+        "url": {"raw":"http://localhost:5000/users","protocol":"http","host":["localhost"],"port":"5000","path":["users"]}
+      }
+    }
+  ]
+}
