@@ -1,5 +1,5 @@
 from flask import Flask
-from config.database import Base, engine
+from config.database import Base, engine, get_db_session
 from controllers.videojuegos_controller import videojuegos_bp
 from controllers.user_controllers import user_bp, register_jwt_error_handlers
 from flask_jwt_extended import JWTManager

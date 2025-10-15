@@ -1,6 +1,7 @@
 import logging
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import create_access_token, jwt_required, create_refresh_token, get_jwt_identity
+from utils.auth_utils import role_required
 from flask_jwt_extended.exceptions import NoAuthorizationError
 
 from config.database import get_db_session
@@ -68,7 +69,7 @@ def get_users():
     try:
         users = service.get_all_users()
         logger.info("Consulta de todos los usuarios")
-    return jsonify([{'id': u.id, 'email': u.email, 'username': u.username} for u in users]), 200, {'Content-Type': 'application/json; charset=utf-8'}
+        return jsonify([{'id': u.id, 'email': u.email, 'username': u.username} for u in users]), 200, {'Content-Type': 'application/json; charset=utf-8'}
     finally:
         try:
             service.repo.db.close()
@@ -111,8 +112,8 @@ def create_user():
         return jsonify({'error': 'Servicio de usuarios no implementado'}), 501, {'Content-Type': 'application/json; charset=utf-8'}
 
     try:
-    # validar input
-    validation = service.validate_user_input(email, password)
+        # validar input
+        validation = service.validate_user_input(email, password)
         if validation is not None:
             status, message = validation
             logger.warning(f"Registro fallido: {message}")
@@ -133,7 +134,7 @@ def create_user():
             except Exception:
                 role = None
 
-    user = service.create_user(email, password, username=username)
+        user = service.create_user(email, password, username=username)
         # si queremos soportar role en creación, actualizarlo ahora (requiere sesión)
         if role and user:
             service.repo.update_user(user.id, role=role)
@@ -194,7 +195,6 @@ def logout():
 
 @user_bp.route('/users/<int:user_id>', methods=['PUT'])
 @jwt_required()
-from utils.auth_utils import role_required
 @role_required('admin')
 def update_user(user_id):
     data = request.get_json() or {}
