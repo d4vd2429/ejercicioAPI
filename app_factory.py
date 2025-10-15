@@ -12,6 +12,20 @@ def create_app(test_config: dict = None):
     if test_config:
         app.config.update(test_config)
     jwt = JWTManager(app)
+    # register token blocklist check
+    from services.token_services import TokenService
+
+    @jwt.token_in_blocklist_loader
+    def check_if_token_revoked(jwt_header, jwt_payload):
+        jti = jwt_payload.get('jti')
+        svc = TokenService(get_db_session())
+        try:
+            return svc.is_revoked(jti)
+        finally:
+            try:
+                svc.repo.db.close()
+            except Exception:
+                pass
 
     # create tables
     Base.metadata.create_all(bind=engine)

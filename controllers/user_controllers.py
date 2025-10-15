@@ -168,8 +168,34 @@ def refresh():
             pass
 
 
+
+@user_bp.route('/logout', methods=['POST'])
+@jwt_required(refresh=True)
+def logout():
+    """Revoca el refresh token actual (añade su jti a la lista de revocados)."""
+    from flask_jwt_extended import get_jwt
+    svc = _get_users_service()
+    if svc is None:
+        return jsonify({'error': 'Servicio de usuarios no implementado'}), 501, {'Content-Type': 'application/json; charset=utf-8'}
+    try:
+        token = get_jwt()
+        jti = token.get('jti')
+        # usar TokenService para revocar
+        from services.token_services import TokenService
+        tsvc = TokenService(svc.repo.db)
+        tsvc.revoke_token(jti)
+        return jsonify({'message': 'Refresh token revocado'}), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    finally:
+        try:
+            svc.repo.db.close()
+        except Exception:
+            pass
+
+
 @user_bp.route('/users/<int:user_id>', methods=['PUT'])
 @jwt_required()
+from utils.auth_utils import role_required
+@role_required('admin')
 def update_user(user_id):
     data = request.get_json() or {}
     username = data.get('username')
@@ -193,6 +219,7 @@ def update_user(user_id):
 
 @user_bp.route('/users/<int:user_id>', methods=['DELETE'])
 @jwt_required()
+@role_required('admin')
 def delete_user(user_id):
     service = _get_users_service()
     if service is None:
