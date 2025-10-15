@@ -17,13 +17,13 @@ def client():
 
 def test_register_and_login_and_refresh(client):
     # Register
-    resp = client.post('/registry', json={'username': 'testuser', 'password': 'secret123'})
+    resp = client.post('/registry', json={'email': 'testuser@example.com', 'username': 'testuser', 'password': 'secret123'})
     assert resp.status_code == 201
     data = resp.get_json()
     assert 'id' in data
 
     # Login
-    resp = client.post('/login', json={'username': 'testuser', 'password': 'secret123'})
+    resp = client.post('/login', json={'email': 'testuser@example.com', 'password': 'secret123'})
     assert resp.status_code == 200
     data = resp.get_json()
     assert 'access_token' in data and 'refresh_token' in data

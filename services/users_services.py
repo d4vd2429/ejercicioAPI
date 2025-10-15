@@ -8,24 +8,22 @@ class UsersService:
     def __init__(self, db_session: Session):
         self.repo = UserRepository(db_session)
 
-    def authenticate_user(self, username: str, password: str):
-        user = self.repo.get_by_username(username)
+    def authenticate_user(self, email: str, password: str):
+        user = self.repo.get_by_email(email)
         if user and check_password_hash(user.password_hash, password):
             return user
         return None
 
-    def validate_user_input(self, username: str, password: str):
+    def validate_user_input(self, email: str, password: str):
         """Return None if valid, else a tuple (status_code, message)."""
-        if not username or not password:
-            return 400, 'El nombre de usuario y la contraseña son obligatorios'
-        if len(username) < 3 or len(username) > 50:
-            return 400, 'El nombre de usuario debe tener entre 3 y 50 caracteres'
+        if not email or not password:
+            return 400, 'El email y la contraseña son obligatorios'
+        if len(email) < 5 or len(email) > 255 or '@' not in email:
+            return 400, 'El email no es válido'
         if len(password) < 6:
             return 400, 'La contraseña debe tener al menos 6 caracteres'
-        if not re.match(r'^[A-Za-z0-9_-]+$', username):
-            return 400, 'El nombre de usuario contiene caracteres inválidos'
-        if self.repo.get_by_username(username):
-            return 409, 'El nombre de usuario ya existe'
+        if self.repo.get_by_email(email):
+            return 409, 'El email ya existe'
         return None
 
     def get_all_users(self):
@@ -34,7 +32,7 @@ class UsersService:
     def get_user_by_id(self, user_id: int):
         return self.repo.get_user_by_id(user_id)
 
-    def create_user(self, username: str, password: str):
+    def create_user(self, email: str, password: str, username: str = None):
         # Validaciones básicas
         if not username or not password:
             # caller will treat None as error
@@ -44,15 +42,13 @@ class UsersService:
         if len(password) < 6:
             return None
         # username allowed chars: letters, numbers, underscores, hyphens
-        if not re.match(r'^[A-Za-z0-9_-]+$', username):
-            return None
-        # verificar si ya existe usuario con ese username
-        existing = self.repo.get_by_username(username)
+        # verificar si ya existe usuario con ese email
+        existing = self.repo.get_by_email(email)
         if existing:
             return None
         # hash password before saving
         pw_hash = generate_password_hash(password)
-        return self.repo.create_user(username, pw_hash)
+        return self.repo.create_user(email, username, pw_hash)
 
     def get_user_role(self, user_id: int):
         user = self.repo.get_user_by_id(user_id)
