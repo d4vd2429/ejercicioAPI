@@ -58,3 +58,10 @@ Si deseas contribuir, por favor sigue las buenas prácticas de documentación y 
 
 ## Licencia
 Este proyecto es de uso libre para fines educativos y de aprendizaje.
+
+## Actualizaciones
+Se implementó un sistema de autenticación y autorización completo basado en JWT.
+Se añadió soporte para roles de usuario (campo role).
+Se añadió revocación de refresh tokens (blocklist).
+Se creó la estructura completa para usuarios: modelo, repositorio, servicio y controlador.
+Se hicieron commits en la rama develop
