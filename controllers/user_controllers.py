@@ -69,7 +69,7 @@ def get_users():
     try:
         users = service.get_all_users()
         logger.info("Consulta de todos los usuarios")
-        return jsonify([{'id': u.id, 'email': u.email, 'username': u.username} for u in users]), 200, {'Content-Type': 'application/json; charset=utf-8'}
+    return jsonify([{'id': u.id, 'email': u.email, 'username': u.username, 'role': u.role} for u in users]), 200, {'Content-Type': 'application/json; charset=utf-8'}
     finally:
         try:
             service.repo.db.close()
@@ -87,7 +87,7 @@ def get_user(user_id):
         user = service.get_user_by_id(user_id)
         if user:
             logger.info(f"Consulta de usuario por ID: {user_id}")
-            return jsonify({'id': user.id, 'email': user.email, 'username': user.username}), 200, {'Content-Type': 'application/json; charset=utf-8'}
+            return jsonify({'id': user.id, 'email': user.email, 'username': user.username, 'role': user.role}), 200, {'Content-Type': 'application/json; charset=utf-8'}
         logger.warning(f"Usuario no encontrado: {user_id}")
         return jsonify({'error': 'Usuario no encontrado'}), 404, {'Content-Type': 'application/json; charset=utf-8'}
     finally:
