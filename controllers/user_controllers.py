@@ -119,20 +119,10 @@ def create_user():
             logger.warning(f"Registro fallido: {message}")
             return jsonify({'error': message}), status, {'Content-Type': 'application/json; charset=utf-8'}
 
-        # permite role sólo si el request lo hace un admin autenticado
+        # permite role si el cliente lo envía en el body (se aplicará tal cual)
+        # Nota: esto permite que quien registra asigne role; si quieres
+        # mantener la restricción de solo admin, vuelve a añadir la verificación.
         role = data.get('role')
-        if role:
-            # intenta obtener identidad del request (si presentaron Authorization)
-            try:
-                identity = get_jwt_identity()
-                if identity:
-                    current_user_role = service.get_user_role(int(identity))
-                    if current_user_role != 'admin':
-                        role = None
-                else:
-                    role = None
-            except Exception:
-                role = None
 
         user = service.create_user(email, password, username=username)
         # si queremos soportar role en creación, actualizarlo ahora (requiere sesión)
