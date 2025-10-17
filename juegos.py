@@ -1,14 +1,8 @@
-from flask import Flask
-from config.database import Base, engine
-from controllers.videojuegos_controller import videojuegos_bp
+from app_factory import create_app
 
-app = Flask(__name__)
 
-# Crear tablas si no existen
-Base.metadata.create_all(bind=engine)
+app = create_app()
 
-# Registrar las rutas
-app.register_blueprint(videojuegos_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
