@@ -69,7 +69,7 @@ def get_users():
     try:
         users = service.get_all_users()
         logger.info("Consulta de todos los usuarios")
-    return jsonify([{'id': u.id, 'email': u.email, 'username': u.username, 'role': u.role} for u in users]), 200, {'Content-Type': 'application/json; charset=utf-8'}
+        return jsonify([{'id': u.id, 'email': u.email, 'username': u.username, 'role': u.role} for u in users]), 200, {'Content-Type': 'application/json; charset=utf-8'}
     finally:
         try:
             service.repo.db.close()
