@@ -63,4 +63,3 @@ def test_protected_and_logout(client):
     # After logout, refresh should fail (token is revoked)
     resp = client.post('/refresh', headers={'Authorization': f'Bearer {refresh}'})
     assert resp.status_code == 401 or resp.status_code == 422
-*** End Patch
