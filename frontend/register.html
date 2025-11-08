@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro - GameStore</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">GameStore</div>
+    <h2>Crear cuenta</h2>
+    <p class="auth-sub">Únete a la comunidad de jugadores.</p>
+
+    <form id="register-form">
+      <label>Nombre de usuario
+        <input name="username" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+      <label>Contraseña
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit" class="btn-primary">Registrarse</button>
+    </form>
+
+    <div class="auth-footer">
+      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>
